@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component } from "react";
 
 import { Skynet, SkynetClient } from "skynet-js";
 import { ContentRecordDAC } from "@skynetlabs/content-record-library";
@@ -16,6 +16,7 @@ function App() {
   const [userID, setUserID] = useState();
   const [loggedIn, setLoggedIn] = useState(null);
   const [filePath, setFilePath] = useState();
+  const [todoData, setTodoData] = useState([]);
 
   // When dataKey changes, update FilePath state.
   useEffect(() => {
@@ -86,6 +87,52 @@ function App() {
     }
   }
 
+  function ToDoList() {
+    return (
+      <table>
+        <tbody>
+          {todoData.map((item, index) => {
+            return <ToDoItem key={index} index={index} />;
+          })}
+        </tbody>
+      </table>
+    );
+  }
+
+  function ToDoItem(props) {
+    return (
+      <tr>
+        <td className="checkBoxCell">
+          <input
+            type="checkbox"
+            checked={todoData[props.index].done}
+            onChange={(e) => {
+              todoData[props.index].done = e.target.checked;
+              setTodoData(new Array(...todoData));
+            }}
+          />
+        </td>
+        <td>
+          <textarea
+            defaultValue={todoData[props.index].title}
+            onChange={(e) => (todoData[props.index].title = e.target.value)}
+          />
+        </td>
+      </tr>
+    );
+  }
+
+  const addRow = function () {
+    if (todoData) {
+      const temp = new Array(...todoData);
+      temp.push({ done: false, title: "" });
+      setTodoData(temp);
+      console.log(temp);
+    } else {
+      setTodoData(new Array({ done: false, title: "" }));
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -94,7 +141,14 @@ function App() {
           <LogginLogoutButton />
         </div>
       </header>
-      <div className="App-body"></div>
+      <div className="App-body">
+        <ToDoList />
+        <button className="tableActionButtons">Delete Selected</button>
+        <button className="tableActionButtons" onClick={addRow}>
+          Add Row
+        </button>
+        <button className="tableActionButtons">Save Changes to MySky</button>
+      </div>
     </div>
   );
 }
