@@ -11,12 +11,13 @@ const client = new SkynetClient(portal);
 const contentRecord = new ContentRecordDAC();
 
 function App() {
-  const [dataKey, setDataKey] = useState("");
+  const [dataKey, setDataKey] = useState("ToDoFiles");
   const [mySky, setMySky] = useState();
   const [userID, setUserID] = useState();
   const [loggedIn, setLoggedIn] = useState(null);
   const [filePath, setFilePath] = useState();
   const [todoData, setTodoData] = useState([]);
+  const [loading, setLoading] = useState();
 
   // When dataKey changes, update FilePath state.
   useEffect(() => {
@@ -46,6 +47,11 @@ function App() {
         setLoggedIn(loggedIn);
         if (loggedIn) {
           setUserID(await mySky.userID());
+          setFilePath(dataDomain + "/" + dataKey);
+          const { data } = await mySky.getJSON(dataDomain + "/" + dataKey);
+          if (data) {
+            setTodoData(data);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -67,6 +73,11 @@ function App() {
 
     if (status) {
       setUserID(await mySky.userID());
+    }
+
+    const { data } = await mySky.getJSON(filePath);
+    if (data) {
+      setTodoData(data);
     }
   };
 
@@ -137,6 +148,14 @@ function App() {
     setTodoData(todoData.filter((e) => !e.done));
   }
 
+  const uploadToMySky = async (event) => {
+    try {
+      await mySky.setJSON(filePath, todoData);
+    } catch (error) {
+      console.error(`error with setJSON: ${error.message}`);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -153,7 +172,9 @@ function App() {
         <button className="tableActionButtons" onClick={addRow}>
           Add Row
         </button>
-        <button className="tableActionButtons">Save Changes to MySky</button>
+        <button className="tableActionButtons" onClick={uploadToMySky}>
+          Save Changes to MySky
+        </button>
       </div>
     </div>
   );
