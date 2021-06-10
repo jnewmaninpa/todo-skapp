@@ -58,10 +58,6 @@ function App() {
   }, []);
 
   const handleMySkyLogin = async () => {
-    /************************************************/
-    /*        Step 3.3 Code goes here               */
-    /************************************************/
-
     // Try login again, opening pop-up. Returns true if successful
     const status = await mySky.requestLoginAccess();
 
@@ -71,16 +67,31 @@ function App() {
     if (status) {
       setUserID(await mySky.userID());
     }
-
-    /*****/
   };
+
+  const handleMySkyLogout = async () => {
+    // call logout to globally logout of mysky
+    await mySky.logout();
+
+    //set react state
+    setLoggedIn(false);
+    setUserID("");
+  };
+
+  function LogginLogoutButton() {
+    if (loggedIn) {
+      return <button onClick={handleMySkyLogout}>Logout</button>;
+    } else {
+      return <button onClick={handleMySkyLogin}>Login with MySky</button>;
+    }
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Todo</h1>
         <div className="App-header-right">
-          <button onClick={handleMySkyLogin}>Login with MySky</button>
+          <LogginLogoutButton />
         </div>
       </header>
       <div className="App-body"></div>
