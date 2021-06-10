@@ -133,6 +133,10 @@ function App() {
     }
   };
 
+  function deleteSelected() {
+    setTodoData(todoData.filter((e) => !e.done));
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -143,7 +147,9 @@ function App() {
       </header>
       <div className="App-body">
         <ToDoList />
-        <button className="tableActionButtons">Delete Selected</button>
+        <button className="tableActionButtons" onClick={deleteSelected}>
+          Delete Selected
+        </button>
         <button className="tableActionButtons" onClick={addRow}>
           Add Row
         </button>
