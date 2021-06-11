@@ -7,7 +7,7 @@ import { uploadToMySky } from "../helpers/MySkyHelpers";
 
 function ToDoList(props) {
   const [uploading, setUploading] = useState(false);
-  const { mySky, todoData, setTodoData, filePath } = props;
+  const { mySky, todoData, setTodoData } = props;
 
   const addTodo = function () {
     if (todoData) {

@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import AppHeader from "./components/AppHeader";
 import AppBody from "./components/AppBody";
 import {
-  filePath,
   initMySky,
   handleMySkyLogin,
   handleMySkyLogout,
@@ -32,7 +31,6 @@ function App() {
       <AppBody
         loggedIn={loggedIn}
         loading={loading}
-        filePath={filePath}
         todoData={todoData}
         setTodoData={setTodoData}
         mySky={mySky}
