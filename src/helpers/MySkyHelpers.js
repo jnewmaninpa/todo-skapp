@@ -59,3 +59,15 @@ export const handleMySkyLogout = async (mySky, setLoggedIn, setTodoData) => {
   setLoggedIn(false);
   setTodoData([]);
 };
+
+export const uploadToMySky = async (mySky, setUploading, todoData) => {
+  try {
+    setUploading(true);
+    console.log("Uploading...");
+    await mySky.setJSON(filePath, todoData);
+    console.log("Upload complete!");
+    setUploading(false);
+  } catch (error) {
+    console.error(`error with setJSON: ${error.message}`);
+  }
+};

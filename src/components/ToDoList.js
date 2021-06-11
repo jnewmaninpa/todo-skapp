@@ -3,21 +3,11 @@ import { useState } from "react";
 
 import TextareaAutosize from "react-textarea-autosize";
 
+import { uploadToMySky } from "../helpers/MySkyHelpers";
+
 function ToDoList(props) {
   const [uploading, setUploading] = useState(false);
   const { mySky, todoData, setTodoData, filePath } = props;
-
-  const uploadToMySky = async () => {
-    try {
-      setUploading(true);
-      console.log("Uploading...");
-      await mySky.setJSON(filePath, todoData);
-      console.log("Upload complete!");
-      setUploading(false);
-    } catch (error) {
-      console.error(`error with setJSON: ${error.message}`);
-    }
-  };
 
   const addTodo = function () {
     if (todoData) {
@@ -71,7 +61,7 @@ function ToDoList(props) {
             </Button>
             <Button
               floated="right"
-              onClick={uploadToMySky}
+              onClick={() => uploadToMySky(mySky, setUploading, todoData)}
               disabled={uploading}
               loading={uploading}
               primary
