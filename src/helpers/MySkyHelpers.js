@@ -7,7 +7,6 @@ const dataDomain = window.location.hostname.split(".")[0];
 export const filePath = dataDomain + "/ToDoFiles";
 
 export async function initMySky(
-  mySky,
   setMySky,
   setLoggedIn,
   setLoading,

@@ -19,7 +19,7 @@ function App() {
 
   // On initial run, start initialization of MySky
   useEffect(() => {
-    initMySky(mySky, setMySky, setLoggedIn, setLoading, setTodoData);
+    initMySky(setMySky, setLoggedIn, setLoading, setTodoData);
   }, [mySky]);
 
   return (
