@@ -82,6 +82,7 @@ function App() {
   const handleMySkyLogout = async () => {
     await mySky.logout();
     setLoggedIn(false);
+    setTodoData([]);
   };
 
   function LogginLogoutButton() {
