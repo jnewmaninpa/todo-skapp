@@ -1,30 +1,31 @@
 import "./App.css";
 
-import { useState, useEffect, Component } from "react";
+import {
+  Button,
+  Header,
+  Grid,
+  Message,
+  Container,
+  Dimmer,
+} from "semantic-ui-react";
+import TextareaAutosize from "react-textarea-autosize";
 
-import { Skynet, SkynetClient } from "skynet-js";
-import { ContentRecordDAC } from "@skynetlabs/content-record-library";
+import { useState, useEffect } from "react";
+
+import { SkynetClient } from "skynet-js";
 
 const portal =
   window.location.hostname === "localhost" ? "https://siasky.net" : undefined;
 const client = new SkynetClient(portal);
-const contentRecord = new ContentRecordDAC();
 
 function App() {
-  const [dataKey, setDataKey] = useState("ToDoFiles");
-  const [mySky, setMySky] = useState();
-  const [userID, setUserID] = useState();
-  const [loggedIn, setLoggedIn] = useState(null);
-  const [filePath, setFilePath] = useState();
-  const [todoData, setTodoData] = useState([]);
-  const [loading, setLoading] = useState();
-
-  // When dataKey changes, update FilePath state.
-  useEffect(() => {
-    setFilePath(dataDomain + "/" + dataKey);
-  }, [dataKey]);
-
   const dataDomain = window.location.hostname.split(".")[0];
+  const filePath = dataDomain + "/ToDoFiles";
+  const [mySky, setMySky] = useState();
+  const [loggedIn, setLoggedIn] = useState(null);
+  const [todoData, setTodoData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // On initial run, start initialization of MySky
   useEffect(() => {
@@ -35,9 +36,6 @@ function App() {
         // needed for permissions write
         const mySky = await client.loadMySky(dataDomain);
 
-        // load necessary DACs and permissions
-        await mySky.loadDacs(contentRecord);
-
         // check if user is already logged in with permissions
         const loggedIn = await mySky.checkLogin();
 
@@ -46,12 +44,14 @@ function App() {
         setMySky(mySky);
         setLoggedIn(loggedIn);
         if (loggedIn) {
-          setUserID(await mySky.userID());
-          setFilePath(dataDomain + "/" + dataKey);
-          const { data } = await mySky.getJSON(dataDomain + "/" + dataKey);
+          console.log("Loading data");
+          setLoading(true);
+          const { data } = await mySky.getJSON(filePath);
           if (data) {
             setTodoData(data);
           }
+          console.log("done loading");
+          setLoading(false);
         }
       } catch (e) {
         console.error(e);
@@ -60,60 +60,73 @@ function App() {
 
     // call async setup function
     initMySky();
-
-    /*****/
   }, []);
 
   const handleMySkyLogin = async () => {
-    // Try login again, opening pop-up. Returns true if successful
     const status = await mySky.requestLoginAccess();
-
-    // set react state
     setLoggedIn(status);
 
     if (status) {
-      setUserID(await mySky.userID());
-    }
-
-    const { data } = await mySky.getJSON(filePath);
-    if (data) {
-      setTodoData(data);
+      // Try to load data if loggin successful
+      try {
+        const { data } = await mySky.getJSON(filePath);
+        if (data) {
+          setTodoData(data);
+        }
+      } catch (error) {
+        console.error(`Error fetching data ${error.message}`);
+      }
     }
   };
 
   const handleMySkyLogout = async () => {
-    // call logout to globally logout of mysky
     await mySky.logout();
-
-    //set react state
     setLoggedIn(false);
-    setUserID("");
   };
 
   function LogginLogoutButton() {
     if (loggedIn) {
-      return <button onClick={handleMySkyLogout}>Logout</button>;
+      return <Button onClick={handleMySkyLogout}>Logout</Button>;
     } else {
-      return <button onClick={handleMySkyLogin}>Login with MySky</button>;
+      return <Button onClick={handleMySkyLogin}>Login with MySky</Button>;
     }
   }
 
   function ToDoList() {
     return (
-      <table>
-        <tbody>
+      <Container className="App-grid-container">
+        <Grid centered>
           {todoData.map((item, index) => {
             return <ToDoItem key={index} index={index} />;
           })}
-        </tbody>
-      </table>
+          <Grid.Row>
+            <Grid.Column mobile={16}>
+              <Button primary onClick={deleteSelected}>
+                Delete Selected
+              </Button>
+              <Button primary onClick={addTodo}>
+                Add Todo
+              </Button>
+              <Button
+                floated="right"
+                onClick={uploadToMySky}
+                disabled={uploading}
+                loading={uploading}
+                primary
+              >
+                {uploading ? "Uploading" : "Save Changes to MySky"}
+              </Button>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     );
   }
 
   function ToDoItem(props) {
     return (
-      <tr>
-        <td className="checkBoxCell">
+      <Grid.Row columns={16} stretched>
+        <Grid.Column mobile={3} tablet={2} computer={1}>
           <input
             type="checkbox"
             checked={todoData[props.index].done}
@@ -122,18 +135,18 @@ function App() {
               setTodoData(new Array(...todoData));
             }}
           />
-        </td>
-        <td>
-          <textarea
+        </Grid.Column>
+        <Grid.Column mobile={13} tablet={14} computer={15}>
+          <TextareaAutosize
             defaultValue={todoData[props.index].title}
             onChange={(e) => (todoData[props.index].title = e.target.value)}
           />
-        </td>
-      </tr>
+        </Grid.Column>
+      </Grid.Row>
     );
   }
 
-  const addRow = function () {
+  const addTodo = function () {
     if (todoData) {
       const temp = new Array(...todoData);
       temp.push({ done: false, title: "" });
@@ -150,7 +163,11 @@ function App() {
 
   const uploadToMySky = async (event) => {
     try {
+      setUploading(true);
+      console.log("Uploading...");
       await mySky.setJSON(filePath, todoData);
+      console.log("Upload complete!");
+      setUploading(false);
     } catch (error) {
       console.error(`error with setJSON: ${error.message}`);
     }
@@ -159,23 +176,27 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Todo</h1>
+        <Header as="h1" inverted>
+          Todo Tracker
+        </Header>
         <div className="App-header-right">
           <LogginLogoutButton />
         </div>
       </header>
-      <div className="App-body">
+      <div className="App-body" hidden={!loggedIn}>
+        <Dimmer active={loading} page>
+          <h1 hidden={!loading}>Loading</h1>
+        </Dimmer>
+
         <ToDoList />
-        <button className="tableActionButtons" onClick={deleteSelected}>
-          Delete Selected
-        </button>
-        <button className="tableActionButtons" onClick={addRow}>
-          Add Row
-        </button>
-        <button className="tableActionButtons" onClick={uploadToMySky}>
-          Save Changes to MySky
-        </button>
       </div>
+      <Message hidden={loggedIn}>
+        <Message.Header>Please Login</Message.Header>
+        <p>
+          Please login to continue... If you do not have an account you can make
+          one for free.
+        </p>
+      </Message>
     </div>
   );
 }
