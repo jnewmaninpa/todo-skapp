@@ -8,6 +8,7 @@ import {
   Container,
   Dimmer,
 } from "semantic-ui-react";
+
 import TextareaAutosize from "react-textarea-autosize";
 
 import { useState, useEffect } from "react";
@@ -125,22 +126,23 @@ function App() {
   }
 
   function ToDoItem(props) {
+    const { index } = props;
     return (
       <Grid.Row columns={16} stretched>
         <Grid.Column mobile={3} tablet={2} computer={1}>
           <input
             type="checkbox"
-            checked={todoData[props.index].done}
+            checked={todoData[index].done}
             onChange={(e) => {
-              todoData[props.index].done = e.target.checked;
+              todoData[index].done = e.target.checked;
               setTodoData(new Array(...todoData));
             }}
           />
         </Grid.Column>
         <Grid.Column mobile={13} tablet={14} computer={15}>
           <TextareaAutosize
-            defaultValue={todoData[props.index].title}
-            onChange={(e) => (todoData[props.index].title = e.target.value)}
+            defaultValue={todoData[index].title}
+            onChange={(e) => (todoData[index].title = e.target.value)}
           />
         </Grid.Column>
       </Grid.Row>
@@ -162,7 +164,7 @@ function App() {
     setTodoData(todoData.filter((e) => !e.done));
   }
 
-  const uploadToMySky = async (event) => {
+  const uploadToMySky = async () => {
     try {
       setUploading(true);
       console.log("Uploading...");
@@ -184,13 +186,14 @@ function App() {
           <LogginLogoutButton />
         </div>
       </header>
+
       <div className="App-body" hidden={!loggedIn}>
         <Dimmer active={loading} page>
           <h1 hidden={!loading}>Loading</h1>
         </Dimmer>
-
         <ToDoList />
       </div>
+
       <Message hidden={loggedIn}>
         <Message.Header>Please Login</Message.Header>
         <p>
