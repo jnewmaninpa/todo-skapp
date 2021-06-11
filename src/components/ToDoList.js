@@ -21,12 +21,9 @@ function ToDoList(props) {
 
   const addTodo = function () {
     if (todoData) {
-      const temp = new Array(...todoData);
-      temp.push({ done: false, title: "" });
-      setTodoData(temp);
-      console.log(temp);
+      setTodoData([...todoData, { done: false, title: "" }]);
     } else {
-      setTodoData(new Array({ done: false, title: "" }));
+      setTodoData([{ done: false, title: "" }]);
     }
   };
 
@@ -61,7 +58,7 @@ function ToDoList(props) {
   return (
     <Container className="App-grid-container">
       <Grid centered>
-        {todoData.map((item, index) => {
+        {todoData.map((_, index) => {
           return <ToDoItem key={index} index={index} />;
         })}
         <Grid.Row>
