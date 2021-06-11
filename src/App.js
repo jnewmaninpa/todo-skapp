@@ -15,6 +15,8 @@ import { useState, useEffect } from "react";
 
 import { SkynetClient } from "skynet-js";
 
+import LoginLogoutButton from "./components/LoginLogoutButton";
+
 const portal =
   window.location.hostname === "localhost" ? "https://siasky.net" : undefined;
 const client = new SkynetClient(portal);
@@ -85,14 +87,6 @@ function App() {
     setLoggedIn(false);
     setTodoData([]);
   };
-
-  function LogginLogoutButton() {
-    if (loggedIn) {
-      return <Button onClick={handleMySkyLogout}>Logout</Button>;
-    } else {
-      return <Button onClick={handleMySkyLogin}>Login with MySky</Button>;
-    }
-  }
 
   function ToDoList() {
     return (
@@ -183,7 +177,11 @@ function App() {
           Todo Tracker
         </Header>
         <div className="App-header-right">
-          <LogginLogoutButton />
+          <LoginLogoutButton
+            loggedIn={loggedIn}
+            handleLogin={handleMySkyLogin}
+            handleLogout={handleMySkyLogout}
+          />
         </div>
       </header>
 
