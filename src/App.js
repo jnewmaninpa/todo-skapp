@@ -1,13 +1,13 @@
 import "./App.css";
 
-import { Header, Message, Dimmer } from "semantic-ui-react";
+import { Message, Dimmer } from "semantic-ui-react";
 
 import { useState, useEffect } from "react";
 
 import { SkynetClient } from "skynet-js";
 
-import LoginLogoutButton from "./components/LoginLogoutButton";
 import ToDoList from "./components/ToDoList";
+import AppHeader from "./components/AppHeader";
 
 const portal =
   window.location.hostname === "localhost" ? "https://siasky.net" : undefined;
@@ -81,19 +81,11 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <Header as="h1" inverted>
-          Todo Tracker
-        </Header>
-        <div className="App-header-right">
-          <LoginLogoutButton
-            loggedIn={loggedIn}
-            handleLogin={handleMySkyLogin}
-            handleLogout={handleMySkyLogout}
-          />
-        </div>
-      </header>
-
+      <AppHeader
+        loggedIn={loggedIn}
+        handleLogin={handleMySkyLogin}
+        handleLogout={handleMySkyLogout}
+      />
       <div className="App-body" hidden={!loggedIn}>
         <Dimmer active={loading} page>
           <h1 hidden={!loading}>Loading</h1>
