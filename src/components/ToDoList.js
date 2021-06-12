@@ -9,7 +9,7 @@ function ToDoList(props) {
   const [uploading, setUploading] = useState(false);
   const { todoData, setTodoData } = props;
 
-  const addTodo = function () {
+  const addTodo = () => {
     if (todoData) {
       setTodoData([...todoData, { done: false, title: "" }]);
     } else {
@@ -17,9 +17,9 @@ function ToDoList(props) {
     }
   };
 
-  function deleteSelected() {
+  const deleteSelected = () => {
     setTodoData(todoData.filter((e) => !e.done));
-  }
+  };
 
   function ToDoItem(props) {
     const { index } = props;

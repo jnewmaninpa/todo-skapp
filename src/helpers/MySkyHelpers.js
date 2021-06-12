@@ -3,10 +3,11 @@ import { SkynetClient } from "skynet-js";
 const portal =
   window.location.hostname === "localhost" ? "https://siasky.net" : undefined;
 const client = new SkynetClient(portal);
+
 const dataDomain = window.location.hostname.split(".")[0];
 export const filePath = dataDomain + "/ToDoFiles";
 
-export async function initMySky(props) {
+export const initMySky = async (props) => {
   const { setMySky, setLoggedIn } = props;
   try {
     // load invisible iframe and define app's data domain
@@ -24,9 +25,9 @@ export async function initMySky(props) {
   } catch (e) {
     console.error(e);
   }
-}
+};
 
-export async function loadData(props) {
+export const loadData = async (props) => {
   const { mySky, setLoading, setTodoData } = props;
   try {
     console.log("Loading data");
@@ -45,7 +46,7 @@ export async function loadData(props) {
   } catch (error) {
     console.error(`error fetching data: ${error.message}`);
   }
-}
+};
 
 export const handleMySkyLogin = async (props) => {
   const { mySky, setLoggedIn, setTodoData } = props;
