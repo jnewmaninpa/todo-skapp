@@ -5,6 +5,10 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import { uploadToMySky } from "../helpers/MySkyHelpers";
 
+const deleteBtnText = "Delete Selected";
+const addBtnText = "Add Todo";
+const saveBtnText = "Save Changes to MySky";
+
 function ToDoList(props) {
   const [uploading, setUploading] = useState(false);
   const { todoData, setTodoData } = props;
@@ -54,10 +58,10 @@ function ToDoList(props) {
         <Grid.Row>
           <Grid.Column mobile={16}>
             <Button primary onClick={deleteSelected}>
-              Delete Selected
+              {deleteBtnText}
             </Button>
             <Button primary onClick={addTodo}>
-              Add Todo
+              {addBtnText}
             </Button>
             <Button
               floated="right"
@@ -66,7 +70,7 @@ function ToDoList(props) {
               loading={uploading}
               primary
             >
-              {uploading ? "Uploading" : "Save Changes to MySky"}
+              {saveBtnText}
             </Button>
           </Grid.Column>
         </Grid.Row>

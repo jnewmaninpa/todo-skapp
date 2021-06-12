@@ -2,12 +2,14 @@ import { Header } from "semantic-ui-react";
 import LoginLogoutButton from "./LoginLogoutButton";
 import { handleMySkyLogin, handleMySkyLogout } from "../helpers/MySkyHelpers";
 
+const headerText = "Todo Tracker";
+
 function AppHeader(props) {
   const { loggedIn } = props;
   return (
     <header className="App-header">
       <Header as="h1" inverted>
-        Todo Tracker
+        {headerText}
       </Header>
       <div className="App-header-right">
         <LoginLogoutButton

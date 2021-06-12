@@ -7,6 +7,13 @@ const client = new SkynetClient(portal);
 const dataDomain = window.location.hostname.split(".")[0];
 export const filePath = dataDomain + "/ToDoFiles";
 
+const loadingText = "Loading...";
+const loadingCompleteText = "Loading complete!";
+const errorLoadingText = "Error fetching data";
+const uploadingText = "Uploading...";
+const uploadingCompleteText = "Upload complete!";
+const errorUploadingText = "Error with setJSON";
+
 export const initMySky = async (props) => {
   const { setMySky, setLoggedIn } = props;
   try {
@@ -32,7 +39,7 @@ export const initMySky = async (props) => {
 export const loadData = async (props) => {
   const { mySky, setLoading, setTodoData } = props;
   try {
-    console.log("Loading data");
+    console.log(loadingText);
     if (setLoading) {
       setLoading(true);
     }
@@ -41,12 +48,12 @@ export const loadData = async (props) => {
     if (data) {
       setTodoData(data);
     }
-    console.log("done loading");
+    console.log(loadingCompleteText);
     if (setLoading) {
       setLoading(false);
     }
   } catch (error) {
-    console.error(`error fetching data: ${error.message}`);
+    console.error(`${errorLoadingText}: ${error.message}`);
   }
 };
 
@@ -71,11 +78,11 @@ export const uploadToMySky = async (props) => {
   const { mySky, setUploading, todoData } = props;
   try {
     setUploading(true);
-    console.log("Uploading...");
+    console.log(uploadingText);
     await mySky.setJSON(filePath, todoData);
-    console.log("Upload complete!");
+    console.log(uploadingCompleteText);
     setUploading(false);
   } catch (error) {
-    console.error(`error with setJSON: ${error.message}`);
+    console.error(`${errorUploadingText}: ${error.message}`);
   }
 };
