@@ -6,12 +6,8 @@ const client = new SkynetClient(portal);
 const dataDomain = window.location.hostname.split(".")[0];
 export const filePath = dataDomain + "/ToDoFiles";
 
-export async function initMySky(
-  setMySky,
-  setLoggedIn,
-  setLoading,
-  setTodoData
-) {
+export async function initMySky(props) {
+  const { setMySky, setLoggedIn } = props;
   try {
     // load invisible iframe and define app's data domain
     // needed for permissions write
@@ -24,43 +20,52 @@ export async function initMySky(
     // to access mySky in rest of app
     setMySky(mySky);
     setLoggedIn(loggedIn);
-    loadData(mySky, setLoading, setTodoData);
+    loadData({ ...props, mySky });
   } catch (e) {
     console.error(e);
   }
 }
 
-export async function loadData(mySky, setLoading, setTodoData) {
+export async function loadData(props) {
+  const { mySky, setLoading, setTodoData } = props;
   try {
     console.log("Loading data");
-    setLoading(true);
+    if (setLoading) {
+      setLoading(true);
+    }
+
     const { data } = await mySky.getJSON(filePath);
     if (data) {
       setTodoData(data);
     }
     console.log("done loading");
-    setLoading(false);
+    if (setLoading) {
+      setLoading(false);
+    }
   } catch (error) {
     console.error(`error fetching data: ${error.message}`);
   }
 }
 
-export const handleMySkyLogin = async (mySky, setLoggedIn, setTodoData) => {
+export const handleMySkyLogin = async (props) => {
+  const { mySky, setLoggedIn, setTodoData } = props;
   const status = await mySky.requestLoginAccess();
   setLoggedIn(status);
 
   if (status) {
-    loadData(mySky, () => null, setTodoData);
+    loadData({ mySky, setTodoData });
   }
 };
 
-export const handleMySkyLogout = async (mySky, setLoggedIn, setTodoData) => {
+export const handleMySkyLogout = async (props) => {
+  const { mySky, setLoggedIn, setTodoData } = props;
   await mySky.logout();
   setLoggedIn(false);
   setTodoData([]);
 };
 
-export const uploadToMySky = async (mySky, setUploading, todoData) => {
+export const uploadToMySky = async (props) => {
+  const { mySky, setUploading, todoData } = props;
   try {
     setUploading(true);
     console.log("Uploading...");

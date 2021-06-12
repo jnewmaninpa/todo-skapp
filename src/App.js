@@ -4,11 +4,7 @@ import { useState, useEffect } from "react";
 
 import AppHeader from "./components/AppHeader";
 import AppBody from "./components/AppBody";
-import {
-  initMySky,
-  handleMySkyLogin,
-  handleMySkyLogout,
-} from "./helpers/MySkyHelpers";
+import { initMySky } from "./helpers/MySkyHelpers";
 
 function App() {
   const [mySky, setMySky] = useState();
@@ -18,15 +14,16 @@ function App() {
 
   // On initial run, start initialization of MySky
   useEffect(() => {
-    initMySky(setMySky, setLoggedIn, setLoading, setTodoData);
+    initMySky({ setMySky, setLoggedIn, setLoading, setTodoData });
   }, []);
 
   return (
     <div className="App">
       <AppHeader
         loggedIn={loggedIn}
-        handleLogin={() => handleMySkyLogin(mySky, setLoggedIn, setTodoData)}
-        handleLogout={() => handleMySkyLogout(mySky, setLoggedIn, setTodoData)}
+        mySky={mySky}
+        setLoggedIn={setLoggedIn}
+        setTodoData={setTodoData}
       />
       <AppBody
         loggedIn={loggedIn}

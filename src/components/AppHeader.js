@@ -1,8 +1,9 @@
 import { Header } from "semantic-ui-react";
 import LoginLogoutButton from "./LoginLogoutButton";
+import { handleMySkyLogin, handleMySkyLogout } from "../helpers/MySkyHelpers";
 
 function AppHeader(props) {
-  const { loggedIn, handleLogin, handleLogout } = props;
+  const { loggedIn } = props;
   return (
     <header className="App-header">
       <Header as="h1" inverted>
@@ -11,8 +12,8 @@ function AppHeader(props) {
       <div className="App-header-right">
         <LoginLogoutButton
           loggedIn={loggedIn}
-          handleLogin={handleLogin}
-          handleLogout={handleLogout}
+          handleLogin={() => handleMySkyLogin(props)}
+          handleLogout={() => handleMySkyLogout(props)}
         />
       </div>
     </header>

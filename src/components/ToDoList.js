@@ -7,7 +7,7 @@ import { uploadToMySky } from "../helpers/MySkyHelpers";
 
 function ToDoList(props) {
   const [uploading, setUploading] = useState(false);
-  const { mySky, todoData, setTodoData } = props;
+  const { todoData, setTodoData } = props;
 
   const addTodo = function () {
     if (todoData) {
@@ -61,7 +61,7 @@ function ToDoList(props) {
             </Button>
             <Button
               floated="right"
-              onClick={() => uploadToMySky(mySky, setUploading, todoData)}
+              onClick={() => uploadToMySky({ ...props, setUploading })}
               disabled={uploading}
               loading={uploading}
               primary
