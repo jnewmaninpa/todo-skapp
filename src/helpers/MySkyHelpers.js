@@ -21,7 +21,9 @@ export const initMySky = async (props) => {
     // to access mySky in rest of app
     setMySky(mySky);
     setLoggedIn(loggedIn);
-    loadData({ ...props, mySky });
+    if (loggedIn) {
+      loadData({ ...props, mySky });
+    }
   } catch (e) {
     console.error(e);
   }

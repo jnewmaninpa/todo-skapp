@@ -8,7 +8,7 @@ import { initMySky } from "./helpers/MySkyHelpers";
 
 function App() {
   const [mySky, setMySky] = useState();
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [todoData, setTodoData] = useState([]);
   const [loading, setLoading] = useState(false);
 
