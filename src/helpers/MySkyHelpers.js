@@ -49,12 +49,12 @@ export const loadData = async (props) => {
 };
 
 export const handleMySkyLogin = async (props) => {
-  const { mySky, setLoggedIn, setTodoData } = props;
+  const { mySky, setLoggedIn } = props;
   const status = await mySky.requestLoginAccess();
   setLoggedIn(status);
 
   if (status) {
-    loadData({ mySky, setTodoData });
+    loadData(props);
   }
 };
 

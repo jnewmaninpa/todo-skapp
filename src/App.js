@@ -22,6 +22,7 @@ function App() {
       <AppHeader
         loggedIn={loggedIn}
         mySky={mySky}
+        setLoading={setLoading}
         setLoggedIn={setLoggedIn}
         setTodoData={setTodoData}
       />
