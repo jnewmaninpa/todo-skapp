@@ -1,4 +1,4 @@
-const viewSourceText = "View the source code on&nbsp;";
+const viewSourceText = "View the source code on";
 const githubText = "GitHub";
 
 const builtWithSkynetAltText = "built with skynet";
@@ -17,7 +17,7 @@ function AppFooter() {
       >
         <img src="./skynet.png" height="35" alt={builtWithSkynetAltText}></img>
       </a>
-      {viewSourceText}
+      {viewSourceText}&nbsp;
       <a href={githubLink} target="_blank" rel="noopener noreferrer">
         {githubText}
       </a>
