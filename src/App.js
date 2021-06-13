@@ -3,6 +3,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 import AppHeader from "./components/AppHeader";
+import AppFooter from "./components/AppFooter";
 import AppBody from "./components/AppBody";
 import { initMySky } from "./helpers/MySkyHelpers";
 
@@ -33,6 +34,7 @@ function App() {
         setTodoData={setTodoData}
         mySky={mySky}
       />
+      <AppFooter />
     </div>
   );
 }
